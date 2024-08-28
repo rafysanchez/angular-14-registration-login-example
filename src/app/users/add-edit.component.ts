@@ -29,15 +29,16 @@ export class AddEditComponent implements OnInit {
         this.form = this.formBuilder.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
-            username: ['', Validators.required],
+            username: ['', [Validators.required, Validators.email]],
+
             // password only required in add mode
             password: ['', [Validators.minLength(6), ...(!this.id ? [Validators.required] : [])]]
         });
 
-        this.title = 'Add User';
+        this.title = 'Add Contact';
         if (this.id) {
             // edit mode
-            this.title = 'Edit User';
+            this.title = 'Edit Contact';
             this.loading = true;
             this.accountService.getById(this.id)
                 .pipe(first())
@@ -78,7 +79,7 @@ export class AddEditComponent implements OnInit {
     }
 
     private saveUser() {
-        // create or update user based on id param
+        // create or update contact based on id param
         return this.id
             ? this.accountService.update(this.id!, this.form.value)
             : this.accountService.register(this.form.value);
